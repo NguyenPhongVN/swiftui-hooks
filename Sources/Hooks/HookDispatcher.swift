@@ -41,9 +41,15 @@ public final class HookDispatcher: ObservableObject {
             HookCoordinator(
                 state: state,
                 environment: scopedState.environment,
-                updateView: objectWillChange.send
+                updateView: updateView
             )
         }
+      
+      func updateView() {
+        Task { @MainActor in
+          objectWillChange.send()
+        }
+      }
 
         func appendNew() -> H.Value {
             let state = hook.makeState()
